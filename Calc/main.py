@@ -6,6 +6,18 @@ from calcFunctions import factorial
 from calcExepctions import *
 
 
+def find_after_dot(exp):
+    # returns the part of the number after the dot
+    # also returns the length of the number after the dot
+    num = 0
+    for i in range(len(exp)):
+        if not exp[i].isdigit():
+            return num / 10 ** len(str(num)), i
+        num *= 10
+        num += int(exp[i])
+    return num / 10 ** len(str(num)), len(exp)
+
+
 def find_num(exp):
 # gets an expression
 # returns the first number of the expression and the fisrt index after him
@@ -29,10 +41,10 @@ def find_num(exp):
     i = 0
     while i<len(exp):
         if not exp[i].isdigit():
-            #if exp[i]=='.':
-            #    after_dot, j = find_after_dot(exp[i+1:])
-            #    return num+after_dot, i+j+1
-            if exp[i] == '!':
+            if exp[i]=='.':
+                after_dot, j = find_after_dot(exp[i+1:])
+                return num+after_dot, i+j+1
+            elif exp[i] == '!':
                 return factorial(num), i+1
             return num, i
         num*=10

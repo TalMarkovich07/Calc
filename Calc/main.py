@@ -17,20 +17,30 @@ def find_after_dot(exp):
         num += int(exp[i])
     return num / 10 ** len(str(num)), len(exp)
 
+def num_contains_semi(exp):
+    for char in exp:
+        if char.isdigit():
+            return False
+        if char == '~':
+            return True
+    return False
+
 
 def find_num(exp):
-# gets an expression
-# returns the first number of the expression and the fisrt index after him
+# gets an expression that's supposed to start with a number
+# returns the first number of the expression and the first index after him
     num = 0
     if exp == '':
         raise EmptyExpressionException()
-    if not exp[0].isdigit():
+    if not exp[0].isdigit(): #checks the cases where the expression doesn't start with a number
         if exp[0]=='~':
-            if exp[1]=='~':
-                raise WrongInputAsOperandException("Two ~ were entered. that's not allowed!")
-            return -1*find_num(exp[1:])
+            if num_contains_semi(exp[1:]): #if expression starts with '~', there must come a number after
+                raise WrongInputAsOperandException("After ~ must come a number.")
+            num, end = find_num(exp[1:])
+            return -1 * num, end + 1
         elif exp[0]=='-':
-            return -1*find_num(exp[1:])
+            num, end = find_num(exp[1:])
+            return -1 * num, end + 1
         elif exp[0]=='!':
             return fc.factorial(find_num(exp[1:]))
         elif exp[0]=='(':
@@ -126,11 +136,11 @@ def run_calculator(exp):
     lst = [[], [], [], [], []]
     #in this list we will keep all of the expressions that are of higher level
     x, end = find_num(exp)
-    #print(f'x={x}')
+    print(f'x={x}')
     operator = exp[end]
-    #print(f'operator={operator}')
+    print(f'operator={operator}')
     level = op_level(operator)
-    #print(f'level={level}')
+    print(f'level={level}')
     lst[level].append(x)
     lst[level].append(operator)
     exp = exp[end+1:]

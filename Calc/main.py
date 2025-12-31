@@ -1,24 +1,22 @@
-from unittest import case
-
-import calcFunctions as fc
-from calcExepctions import calcException, WrongInputAsOperandException, WrongUseOfOperatorException
+import calcFunctions as Fc
 from calcFunctions import factorial
 from calcExepctions import *
 
 
-def find_after_dot(exp):
+def find_after_dot(expression):
     # returns the part of the number after the dot
     # also returns the length of the number after the dot
     num = 0
-    for i in range(len(exp)):
-        if not exp[i].isdigit():
+    for i in range(len(expression)):
+        if not expression[i].isdigit():
             return num / 10 ** len(str(num)), i
         num *= 10
-        num += int(exp[i])
-    return num / 10 ** len(str(num)), len(exp)
+        num += int(expression[i])
+    return num / 10 ** len(str(num)), len(expression)
 
-def num_contains_semi(exp):
-    for char in exp:
+
+def num_contains_semi(expression):
+    for char in expression:
         if char.isdigit():
             return False
         if char == '~':
@@ -26,44 +24,45 @@ def num_contains_semi(exp):
     return False
 
 
-def find_num(exp):
-# gets an expression that's supposed to start with a number
-# returns the first number of the expression and the first index after him
+def find_num(expression):
+    # gets an expression that's supposed to start with a number
+    # returns the first number of the expression and the first index after him
     num = 0
-    if exp == '':
+    if expression == '':
         raise EmptyExpressionException()
-    if not exp[0].isdigit(): #checks the cases where the expression doesn't start with a number
-        if exp[0]=='~':
-            if num_contains_semi(exp[1:]): #if expression starts with '~', there must come a number after
+    if not expression[0].isdigit():  # checks the cases where the expression doesn't start with a number
+        if expression[0] == '~':
+            if num_contains_semi(expression[1:]):  # if expression starts with '~', there must come a number after
                 raise WrongInputAsOperandException("After ~ must come a number.")
-            num, end = find_num(exp[1:])
+            num, end = find_num(expression[1:])
             return -1 * num, end + 1
-        elif exp[0]=='-':
-            num, end = find_num(exp[1:])
+        elif expression[0] == '-':
+            num, end = find_num(expression[1:])
             return -1 * num, end + 1
-        elif exp[0]=='!':
-            return fc.factorial(find_num(exp[1:]))
-        elif exp[0]=='(':
-            end = handle_brackets(exp[1:])
-            return run_calculator(exp[1:end]), end+1
+        elif expression[0] == '!':
+            return Fc.factorial(find_num(expression[1:]))
+        elif expression[0] == '(':
+            end = handle_brackets(expression[1:])
+            return run_calculator(expression[1:end]), end + 1
         else:
-            raise WrongInputAsOperandException(f'{exp[0]} has no meaning to this calculator')
+            raise WrongInputAsOperandException(f'{expression[0]} has no meaning to this calculator')
     i = 0
-    while i<len(exp):
-        if not exp[i].isdigit():
-            if exp[i]=='.':
-                after_dot, j = find_after_dot(exp[i+1:])
-                return num+after_dot, i+j+1
-            elif exp[i] == '!':
-                return factorial(num), i+1
+    while i < len(expression):
+        if not expression[i].isdigit():
+            if expression[i] == '.':
+                after_dot, j = find_after_dot(expression[i + 1:])
+                return num + after_dot, i + j + 1
+            elif expression[i] == '!':
+                return factorial(num), i + 1
             return num, i
-        num*=10
-        num+=int(exp[i])
-        i+=1
+        num *= 10
+        num += int(expression[i])
+        i += 1
     return num, i
 
+
 def op_level(op):
-# gets an operand and return it's level
+    # gets an operand and return it's level
     match op:
         case '+':
             return 0
@@ -83,79 +82,84 @@ def op_level(op):
             return 4
         case '@':
             return 4
+    raise WrongUseOfOperatorException(f'{op} has no meaning to this calculator')
+
+
 def calculate_exp(a, op, b):
-#gets operand 1, operator and operand2, and caculates it
+    # gets operand 1, operator and operand2, and calculates it
     match op:
         case '+':
-            return fc.add(a,b)
+            return Fc.add(a, b)
         case '-':
-            return fc.sub(a,b)
+            return Fc.sub(a, b)
         case '*':
-            return fc.mul(a,b)
+            return Fc.mul(a, b)
         case '/':
-            return fc.div(a,b)
+            return Fc.div(a, b)
         case '^':
-            return fc.pow(a,b)
+            return Fc.pow(a, b)
         case '%':
-            return fc.mod(a,b)
+            return Fc.mod(a, b)
         case '$':
-            return fc.max(a,b)
+            return Fc.max(a, b)
         case '&':
-            return fc.min(a,b)
+            return Fc.min(a, b)
         case '@':
-            return fc.avg(a,b)
+            return Fc.avg(a, b)
+    raise WrongUseOfOperatorException(f'{op} has no meaning to this calculator')
 
 def pop_until(lst, level, x):
-    #collect and solves everthing in the higher and equal level
-    i = len(lst)-1
-    while i>=level:
-        while len(lst[i])>0:
+    # collect and solves everything in the higher and equal level
+    i = len(lst) - 1
+    while i >= level:
+        while len(lst[i]) > 0:
             op = lst[i].pop()
             y = lst[i].pop()
             print(f'current calculation: {y} {op} {x}')
             x = calculate_exp(y, op, x)
-        i-=1
+        i -= 1
     return x
 
-def handle_brackets(exp):
-    #gets an expression that starts with ( and returns the index of the last )
+
+def handle_brackets(expression):
+    # gets an expression that starts with ( and returns the index of the last )
     cnt = 1
-    for i in range(len(exp)):
-        if exp[i]=='(':
+    for i in range(len(expression)):
+        if expression[i] == '(':
             cnt += 1
-        if exp[i]==')':
+        if expression[i] == ')':
             cnt -= 1
             if cnt == 0:
-                return i+1
-    raise WrongUseOfOperatorException('Brakets were opened but were not closed')
+                return i + 1
+    raise WrongUseOfOperatorException('Brackets were opened but were not closed')
 
-def run_calculator(exp):
-    exp = exp.replace(' ', '')
-    exp = exp.strip()
-    exp+='+0'
+
+def run_calculator(expression):
+    expression = expression.replace(' ', '')
+    expression = expression.strip()
+    expression += '+0'
     lst = [[], [], [], [], []]
-    #in this list we will keep all of the expressions that are of higher level
-    x, end = find_num(exp)
+    # in this list we will keep all expressions that are of higher level
+    x, end = find_num(expression)
     print(f'x={x}')
-    operator = exp[end]
+    operator = expression[end]
     print(f'operator={operator}')
     level = op_level(operator)
     print(f'level={level}')
     lst[level].append(x)
     lst[level].append(operator)
-    exp = exp[end+1:]
-    #print(f'exp={exp}')
-    y = 0
+    expression = expression[end + 1:]
+    # print(f'exp={exp}')
     while True:
-        #in this loop, we want to find the next operator and calulate everything above his level
-        x, end = find_num(exp)
-        #print(f'x={x}')
-        exp = exp[end:]
-        if(len(exp)<=0):
+        # in this loop, we want to find the next operator and calculate everything above his level
+        x, end = find_num(expression)
+        # print(f'x={x}')
+        expression = expression[end:]
+        if len(expression) <= 0:
             break
-        operator = exp[0]
-        #print(f'operator={operator}')
-        if(op_level(operator)>level):
+        operator = expression[0]
+        # print(f'operator={operator}')
+        if op_level(operator) > level:
             level = op_level(operator)
             lst[level].append(x)
             lst[level].append(operator)
@@ -164,18 +168,17 @@ def run_calculator(exp):
             x = pop_until(lst, level, x)
             lst[level].append(x)
             lst[level].append(operator)
-        #print(f'lst={lst}')
-        exp = exp[1:]
-        #print(f'exp={exp}')
-    #print(f'lst={lst}')
+        # print(f'lst={lst}')
+        expression = expression[1:]
+        # print(f'exp={exp}')
+    # print(f'lst={lst}')
     return pop_until(lst, level, x)
-
 
 
 if __name__ == '__main__':
     while True:
         exp = input('Enter expression, enter STOP to quit: ')
-        if exp.lower()=='stop':
+        if exp.lower() == 'stop':
             break
         try:
             calculated = run_calculator(exp)

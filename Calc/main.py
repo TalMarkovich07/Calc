@@ -45,7 +45,7 @@ def find_num(exp):
             return fc.factorial(find_num(exp[1:]))
         elif exp[0]=='(':
             end = handle_brackets(exp[1:])
-            return run_calculator(exp[1:end-1]), end+1
+            return run_calculator(exp[1:end]), end+1
         else:
             raise WrongInputAsOperandException(f'{exp[0]} has no meaning to this calculator')
     i = 0

@@ -1,9 +1,6 @@
 class calcException(Exception):
     def __init__(self, message):
         super(calcException, self).__init__(message)
-
-
-
 class WrongUseOfOperatorException(calcException):
     def __init__(self, message):
         super(WrongUseOfOperatorException, self).__init__(message)

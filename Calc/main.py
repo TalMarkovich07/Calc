@@ -4,6 +4,11 @@ from calcExepctions import *
 
 
 def find_after_dot(expression):
+    """
+    finds the fraction part of the number
+    gets an expression that starts with digits
+    returns the digits as a fraction and the length of the fraction
+    """
     # returns the part of the number after the dot
     # also returns the length of the number after the dot
     num = 0
@@ -16,6 +21,10 @@ def find_after_dot(expression):
 
 
 def num_contains_semi(expression):
+    """
+    checks if the first number in the expression contains a semicolumn
+    returns True or False
+    """
     for char in expression:
         if char.isdigit():
             return False
@@ -25,6 +34,12 @@ def num_contains_semi(expression):
 
 
 def find_num(expression):
+    """
+    finds the first number in the expression
+    :param expression:
+    :return the first number in the expression and the first index after him:
+    :raises exceptions if the number is wrong.
+    """
     # gets an expression that's supposed to start with a number
     # returns the first number of the expression and the first index after him
     num = 0
@@ -64,7 +79,12 @@ def find_num(expression):
 
 
 def op_level(op):
-    # gets an operand and return it's level
+    """
+    calculates the level of operation
+    :param op: 
+    :return: the level of operation
+    :raises exception if the operation has no meaning
+    """""
     match op:
         case '+':
             return 0
@@ -88,7 +108,14 @@ def op_level(op):
 
 
 def calculate_exp(a, op, b):
-    # gets operand 1, operator and operand2, and calculates it
+    """
+    calculates given numbers and operator
+    :param a: first number
+    :param op: operator
+    :param b: second number
+    :return: the answer
+    :raises exception if the operation has no meaning
+    """
     match op:
         case '+':
             return Fc.add(a, b)
@@ -111,7 +138,13 @@ def calculate_exp(a, op, b):
     raise WrongUseOfOperatorException(f'{op} has no meaning to this calculator')
 
 def pop_until(lst, level, x):
-    # collect and solves everything in the higher and equal level
+    """
+    gets list of lists and calculates everything in the list and x
+    :param lst: a list of lists containing previous expressions with higher level operators
+    :param level: level of current operator
+    :param x: number to do the last calculation on
+    :return:
+    """
     i = len(lst) - 1
     while i >= level:
         while len(lst[i]) > 0:
@@ -125,6 +158,12 @@ def pop_until(lst, level, x):
 
 def handle_brackets(expression):
     # gets an expression that starts with ( and returns the index of the last )
+    """
+    calculates the index of the last closing bracket
+    :param expression: parameter that starts with ( and end with contains )
+    :return: the index of the last closing bracket
+    :raises exception if found more opening brackets than closing
+    """
     cnt = 1
     for i in range(len(expression)):
         if expression[i] == '(':
@@ -137,6 +176,11 @@ def handle_brackets(expression):
 
 
 def run_calculator(expression):
+    """
+    calculates the given expression
+    :param expression: equation
+    :return: the answer
+    """
     expression = expression.replace(' ', '')
     expression = expression.strip()
     expression += '+0'

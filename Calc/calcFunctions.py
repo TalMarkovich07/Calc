@@ -1,6 +1,4 @@
-from calcExepctions import FactorialOfFloatException
-
-
+import calcExepctions as Ce
 def add(a,b):
     return a+b
 def sub(a,b):
@@ -12,6 +10,8 @@ def div(a,b):
         raise ZeroDivisionError("Cannot divide by zero")
     return a/b
 def pow(a,b):
+    if b * len(str(a)) >= 4300:
+        raise Ce.NumberTooLargeException()
     return a**b
 def mod(a,b):
     return a%b
@@ -32,8 +32,10 @@ def neg(a):
 def factorial(n):
     if n < 0:
         raise ValueError('Cannot factorial negative numbers')
+    if n > 997:
+        raise Ce.NumberTooLargeException()
     elif float(int(n)) != n:
-        raise FactorialOfFloatException()
+        raise Ce.FactorialOfFloatException()
     elif n == 0 or n == 1:
         return 1
     else:

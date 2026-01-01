@@ -20,3 +20,6 @@ class EmptyExpressionException(calcException):
     def __init__(self):
         super(EmptyExpressionException, self).__init__('Expression is empty')
 
+class NumberTooLargeException(calcException):
+    def __init__(self):
+        super(NumberTooLargeException, self).__init__('Number is too large. Please type smaller numbers.')

@@ -38,3 +38,10 @@ def factorial(n):
         return 1
     else:
         return n*factorial(n-1)
+def hashtag(n):
+    string_num = str(n)
+    sum = 0
+    for ch in string_num:
+        if ch.isdigit():
+            sum += int(ch)
+    return sum

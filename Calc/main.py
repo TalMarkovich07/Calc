@@ -54,6 +54,8 @@ def find_num(expression):
                 return num + after_dot, i + j + 1
             elif expression[i] == '!':
                 return factorial(num), i + 1
+            elif expression[i] == '#':
+                return Fc.hashtag(num), i + 1
             return num, i
         num *= 10
         num += int(expression[i])

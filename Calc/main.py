@@ -1,5 +1,4 @@
-import calcFunctions as Fc
-from calcFunctions import factorial
+from calcFunctions import *
 from calcExepctions import *
 
 
@@ -20,62 +19,103 @@ def find_after_dot(expression):
     return num / 10 ** len(str(num)), len(expression)
 
 
-def num_contains_semi(expression):
+def semi_in_num(expression):
     """
-    checks if the first number in the expression contains a semicolumn
-    returns True or False
+    counts how many semicolons appear in the expression
+    :param expression:
+    :return cnt: number of semicolons
     """
+    cnt = 0
     for char in expression:
-        if char.isdigit():
-            return False
         if char == '~':
-            return True
-    return False
-
+            cnt+=1
+    return cnt
 
 def find_num(expression):
     """
     finds the first number in the expression
     :param expression:
-    :return the first number in the expression and the first index after him:
-    :raises exceptions if the number is wrong.
+    :return num, index: first number in the expression and the first index after him
+    :raises exception: if the number doesn't follow omega's calculator rules
     """
     # gets an expression that's supposed to start with a number
     # returns the first number of the expression and the first index after him
-    num = 0
+    number_string = ''
+    another_minus = True
     if expression == '':
         raise EmptyExpressionException()
-    if not expression[0].isdigit():  # checks the cases where the expression doesn't start with a number
-        if expression[0] == '~':
-            if num_contains_semi(expression[1:]):  # if expression starts with '~', there must come a number after
-                raise WrongInputAsOperandException("After ~ must come a number.")
-            num, end = find_num(expression[1:])
-            return -1 * num, end + 1
-        elif expression[0] == '-':
-            num, end = find_num(expression[1:])
-            return -1 * num, end + 1
-        elif expression[0] == '!':
-            return Fc.factorial(find_num(expression[1:]))
-        elif expression[0] == '(':
+    if not (expression[0].isdigit() or expression[0] == '-' or expression[0] == '~'):  # checks the cases where the expression doesn't start with a number
+        if expression[0] == '(':
             end = handle_brackets(expression[1:])
             return run_calculator(expression[1:end]), end + 1
         else:
-            raise WrongInputAsOperandException(f'{expression[0]} has no meaning to this calculator')
+            raise WrongInputAsOperandException(f'Operand cannot start with {expression[0]}')
     i = 0
     while i < len(expression):
-        if not expression[i].isdigit():
-            if expression[i] == '.':
-                after_dot, j = find_after_dot(expression[i + 1:])
-                return num + after_dot, i + j + 1
-            elif expression[i] == '!':
-                return factorial(num), i + 1
-            elif expression[i] == '#':
-                return Fc.hashtag(num), i + 1
-            return num, i
-        num *= 10
-        num += int(expression[i])
-        i += 1
-    return num, i
+        if not (expression[i].isdigit() or expression[i] == '.' or expression[i] == '!' or expression[i] == '#'):
+            if expression[i] == '!' or expression[i] == '#':
+                return calculate_num(expression[:i+1]), i + 1
+            if not another_minus:
+                if expression[i] == '~':
+                    raise WrongUseOfOperatorException('~ cannot appear in the end of a number')
+                else:
+                    return calculate_num(expression[:i]), i
+            else:
+                if expression[i] == '~' or expression[i] == '-':
+                    number_string += expression[i]
+                else:
+                    return calculate_num(expression[:i]), i
+
+        else:
+            another_minus = False
+            number_string += expression[i]
+        i+=1
+    return calculate_num(number_string), i
+
+
+def calculate_num(num_string: str):
+    """
+    calculates the number inside the expression
+    :param num_string:
+    :return num: the number that was calculated
+    :raises WrongUseOfOperatorException: if number has more than 1 ~
+    :raises WrongInputException: if the expression ends with something that don't make sense
+    """
+    if semi_in_num(num_string) > 1:
+        raise WrongUseOfOperatorException('Cannot have two or more ~ in a number.')
+    minus = 1
+    is_deci = False
+    deci = 0
+    num = 0
+    for i in range(len(num_string)):
+        if num_string[i] == '-': #check is positive or negative
+            minus = -1* minus
+        elif num_string[i] == '.':
+            is_deci = True
+        elif num_string[i].isdigit():
+            if is_deci:
+                deci+=int(num_string[i])
+                deci*=10
+            else:
+                num+=int(num_string[i])
+                num*=10
+    num/=10
+    if is_deci:
+        deci = float(deci) / 10**(len(str(deci)))
+        num = float(num) + deci
+
+    if semi_in_num(num_string) == 1:
+        num = -1*num
+
+    last = num_string[-1]
+    if last.isdigit():
+        return num * minus
+    elif last == '!':
+        return factorial(num) * minus
+    elif last == '#':
+        return hashtag(num) * minus
+    raise WrongInputAsOperandException(f'number cannot end with {last}')
+
 
 
 def op_level(op):
@@ -118,23 +158,23 @@ def calculate_exp(a, op, b):
     """
     match op:
         case '+':
-            return Fc.add(a, b)
+            return add(a, b)
         case '-':
-            return Fc.sub(a, b)
+            return sub(a, b)
         case '*':
-            return Fc.mul(a, b)
+            return mul(a, b)
         case '/':
-            return Fc.div(a, b)
+            return div(a, b)
         case '^':
-            return Fc.pow(a, b)
+            return pow(a, b)
         case '%':
-            return Fc.mod(a, b)
+            return mod(a, b)
         case '$':
-            return Fc.max(a, b)
+            return max(a, b)
         case '&':
-            return Fc.min(a, b)
+            return min(a, b)
         case '@':
-            return Fc.avg(a, b)
+            return avg(a, b)
     raise WrongUseOfOperatorException(f'{op} has no meaning to this calculator')
 
 def pop_until(lst, level, x):
@@ -231,3 +271,4 @@ if __name__ == '__main__':
             print(f'{exp} = {calculated}')
         except calcException as ce:
             print(ce)
+

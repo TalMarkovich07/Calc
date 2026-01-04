@@ -1,4 +1,7 @@
 import calcExepctions as Ce
+from calcExepctions import WrongFactorialException
+
+
 def add(a,b):
     return a+b
 def sub(a,b):
@@ -31,7 +34,7 @@ def neg(a):
     return a*-1
 def factorial(n):
     if n < 0:
-        raise ValueError('Cannot factorial negative numbers')
+        raise WrongFactorialException(f'Cannot factorial {n} number because he is negative')
     if n > 997:
         raise Ce.NumberTooLargeException()
     elif float(int(n)) != n:
@@ -41,6 +44,8 @@ def factorial(n):
     else:
         return n*factorial(n-1)
 def hashtag(n):
+    if n < 0:
+        raise Ce.HastagDoneOnNegativeException()
     string_num = str(n)
     sum = 0
     for ch in string_num:

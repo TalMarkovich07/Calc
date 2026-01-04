@@ -5,6 +5,10 @@ class WrongUseOfOperatorException(calcException):
     def __init__(self, message):
         super(WrongUseOfOperatorException, self).__init__(message)
 
+class WrongFactorialException(calcException):
+    def __init__(self, message):
+        super(WrongFactorialException, self).__init__(message)
+
 class WrongInputAsOperandException(calcException):
     def __init__(self, message):
         super(WrongInputAsOperandException, self).__init__(message)
@@ -20,3 +24,7 @@ class EmptyExpressionException(calcException):
 class NumberTooLargeException(calcException):
     def __init__(self):
         super(NumberTooLargeException, self).__init__('Number is too large. Please type smaller numbers.')
+
+class HastagDoneOnNegativeException(calcException):
+    def __init__(self):
+        super(HastagDoneOnNegativeException, self).__init__('Hastag is done on negative numbers')

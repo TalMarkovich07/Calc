@@ -1,4 +1,7 @@
 This project is a complex calculator.
+
+The calculator has the regular functions: +, -, *, /, ^, %, !, but also some unregular functions: $ - maximum, & - minimum, @ - average, ~ - negative, and # - sum. 
+
 Here is an explanation to how the calculator work:
 The user enters an expression. The expression gets sent to 'run_calculator' function.
 This function as a main list which contains lists of every binary operator's level.

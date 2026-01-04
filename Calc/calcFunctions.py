@@ -2,37 +2,37 @@ import calcExepctions as Ce
 from calcExepctions import WrongFactorialException
 
 
-def add(a,b):
+def add(a:float, b:float):
     return a+b
-def sub(a,b):
+def sub(a:float, b:float):
     return a-b
-def mul(a,b):
+def mul(a:float ,b:float):
     return a*b
-def div(a,b):
+def div(a:float, b:float):
     if b == 0:
         raise ZeroDivisionError("Cannot divide by zero")
     return a/b
-def pow(a,b):
+def pow(a:float, b:float):
     if b * len(str(a)) >= 4300:
         raise Ce.NumberTooLargeException()
     return a**b
-def mod(a,b):
+def mod(a:float ,b:float):
     return a%b
-def max(a,b):
+def max(a:float, b:float):
     if a > b:
         return a
     else:
         return b
-def min(a,b):
+def min(a:float, b:float):
     if a < b:
         return a
     else:
         return b
-def avg(a,b):
+def avg(a:float, b:float):
     return (a+b)/2
-def neg(a):
+def neg(a:float):
     return a*-1
-def factorial(n):
+def factorial(n:int):
     if n < 0:
         raise WrongFactorialException(f'Cannot factorial {n} number because he is negative')
     if n > 997:
@@ -43,7 +43,7 @@ def factorial(n):
         return 1
     else:
         return n*factorial(n-1)
-def hashtag(n):
+def hashtag(n:float):
     if n < 0:
         raise Ce.HastagDoneOnNegativeException()
     string_num = str(n)

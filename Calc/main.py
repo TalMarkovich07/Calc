@@ -1,7 +1,7 @@
 from calcFunctions import *
 from calcExepctions import *
 
-def semi_in_num(expression):
+def semi_in_num(expression:str):
     """
     counts how many semicolons appear in the expression
     :param expression:
@@ -13,7 +13,7 @@ def semi_in_num(expression):
             cnt+=1
     return cnt
 
-def find_num(expression):
+def find_num(expression:str):
     """
     finds the first number in the expression
     :param expression:
@@ -114,7 +114,7 @@ def calculate_num(num_string: str):
 
 
 
-def op_level(op):
+def op_level(op:str):
     """
     calculates the level of operator
     :param op: operator
@@ -173,7 +173,7 @@ def calculate_exp(a:int, op:str, b:int):
             return avg(a, b)
     raise WrongUseOfOperatorException(f'{op} has no meaning to this calculator')
 
-def pop_until(lst, level, x):
+def pop_until(lst:list, level:int, x:float):
     """
     gets list of lists and calculates everything in the list and x
     :param lst: a list of lists containing previous expressions with higher level operators
@@ -191,7 +191,7 @@ def pop_until(lst, level, x):
     return x
 
 
-def handle_brackets(expression):
+def handle_brackets(expression:str):
     """
     calculates the index of the last closing bracket
     :param expression: parameter that starts with ( and end with contains )
@@ -209,7 +209,7 @@ def handle_brackets(expression):
     raise WrongUseOfOperatorException('Brackets were opened but were not closed')
 
 
-def run_calculator(expression):
+def run_calculator(expression:str):
     """
     calculates the given expression
     :param expression: equation
